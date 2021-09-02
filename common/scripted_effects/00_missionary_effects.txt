@@ -1,0 +1,195 @@
+# scope:owner => You
+# scope:target => Scheme Target
+
+#scope:target = {
+#    set_character_faith = scope:owner.faith
+#}
+
+###
+# Conversion Effects
+###
+missionary_convert_character_guarantee= {
+    $target$ = {
+        set_character_faith = $owner$.faith
+    }
+}
+
+missionary_convert_character = {
+    random = {
+        chance = scope:scheme.scheme_success_chance
+        $target$ = {
+            set_character_faith = $owner$.faith
+        }
+    }
+}
+
+missionary_convert_target = {
+    missionary_convert_character_guarantee = {
+        target = scope:target
+        owner = scope:owner
+    }
+}
+
+missionary_convert_spouses = {
+    scope:target = {
+        every_spouse = {
+            limit = {
+                OR = {
+                    is_courtier_of = scope:owner
+                    is_courtier_of = scope:target
+                    is_vassal_of = scope:owner
+                    is_vassal_of = scope:target
+                }
+            }
+            save_scope_as = convert_spouse
+            missionary_convert_character = {
+                target = scope:convert_spouse
+                owner = scope:owner
+            }
+        }
+    }
+}
+
+missionary_convert_family_in_court = {
+    if = {
+        limit = {
+            scope:target = {
+                is_ruler = yes
+                any_close_or_extended_family_member = {
+                	exists = court_owner
+                	court_owner = scope:target
+                	NOT = { faith = scope:owner.faith }
+                	is_ai = yes
+                }
+            }
+        }
+        scope:target = {
+            every_close_or_extended_family_member = {
+                custom = all_family_members_at_court
+                limit = {
+                    exists = court_owner
+                    court_owner = scope:target
+                    NOT = { faith = scope:owner.faith }
+                    is_ai = yes
+                }
+                save_scope_as = family_convert
+                missionary_convert_character = {
+                    target = scope:family_convert
+                    owner = scope:owner
+                }
+            }
+        }
+    }
+}
+
+missionary_convert_courtiers = {
+    if = {
+        limit = {
+            scope:target = {
+                is_ruler = yes
+            }
+        }
+        scope:target = {
+            every_courtier = {
+                save_scope_as = courtier_convert
+                missionary_convert_character = {
+                    target = scope:courtier_convert
+                    owner = scope:owner
+                }
+            }
+        }
+    }
+}
+
+missionary_convert_vassal = {
+    if = {
+        limit = {
+            scope:target = {
+                is_ruler = yes
+            }
+        }
+        scope:target = {
+            every_vassal_or_below = {
+                save_scope_as = vassal_convert
+                missionary_convert_character = {
+                    target = scope:vassal_convert
+                    owner = scope:owner
+                }
+            }
+        }
+    }
+}
+
+missionary_convert_province = {
+    if = {
+        limit = {
+            scope:target = {
+                is_ruler = yes
+            }
+        }
+        scope:target = {
+            every_sub_realm_county = {
+                limit = {
+                    title_province = {
+                        NOT = {
+                            faith = scope:owner.faith
+                        }
+                    }
+                }
+                random = {
+                    chance = scope:scheme.scheme_success_chance
+                    set_county_faith = scope:owner.faith
+                }
+            }
+        }
+    }
+}
+
+###
+# Money Effects
+###
+missionary_payment_stewardship = {
+    duel = {
+        skill = stewardship
+        value = 12
+        desc = "Immediately"
+        12 = {
+            compare_modifier = {
+                value = scope:duel_value
+                multiplier = 1
+            }
+            desc = "Cost reduction"
+            show_as_tooltip = {
+                scope:owner =  {
+                    remove_short_term_gold = $money_good$
+                    add_piety = $piety_good$
+                    add_prestige = $prestige_good$
+                }
+            }
+        }
+        20 = {
+            desc = "Initial Cost"
+            show_as_tooltip = {
+                scope:owner = {
+                    remove_short_term_gold = $money_original$
+                    add_piety = $piety_original$
+                    add_prestige = $prestige_original$
+                }
+            }
+        }
+        12 = {
+            compare_modifier = {
+                value = scope:duel_value
+                multiplier = -1
+            }
+            desc = "Additional Costs"
+            show_as_tooltip = {
+                scope:owner = {
+                    remove_short_term_gold = $money_bad$
+                    add_piety = $piety_bad$
+                    add_prestige = $prestige_bad$
+                }
+            }
+        }
+    }
+}

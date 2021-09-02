@@ -1,0 +1,652 @@
+missionary_scheme = {
+
+    skill = diplomacy
+
+    uses_agents = yes
+    agent_join_threshold = 10
+    agent_leave_threshold = 5
+
+    power_per_skill_point = 100
+    power_per_agent_skill_point = 1
+    resistance_per_skill_point = 1
+
+    minimum_progress_chance = 0
+    maximum_progress_chance = 100
+    maximum_success = 100
+
+    cooldown = {
+        years = 5
+    }
+
+    base_success_chance = {
+
+         inside
+
+        # Calculate Success Chance
+        base = -10
+
+        # Faith Hostility
+        #modifier = {
+        #    scope:target.faith = {
+        #        faith_hostility_level = {
+        #            target = scope:owner.faith
+        #            value = faith_fully_accepted_level
+        #        }
+        #    }
+        #    add = {
+        #        value = 5
+        #    }
+        #}
+
+        modifier = {
+            scope:target.faith = {
+                faith_hostility_level = {
+                    target = scope:owner.faith
+                    value = faith_astray_level
+                }
+            }
+            add = {
+                value = -5
+            }
+        }
+
+        modifier = {
+            scope:target.faith = {
+                faith_hostility_level = {
+                    target = scope:owner.faith
+                    value = faith_hostile_level
+                }
+            }
+            add = {
+                value = -25
+            }
+        }
+
+        modifier = {
+            scope:target.faith = {
+                faith_hostility_level = {
+                    target = scope:owner.faith
+                    value = faith_evil_level
+                }
+            }
+            add = {
+                value = -50
+            }
+        }
+
+        # Character Values
+        modifier = {
+            scope:owner.learning != scope:target.learning
+            add = {
+                value = scope:owner.learning
+                subtract = scope:target.learning
+            }
+        }
+
+        modifier = {
+            scope:owner.diplomacy != scope:target.diplomacy
+            add = {
+                value = scope:owner.diplomacy
+                subtract = scope:target.diplomacy
+            }
+        }
+
+        # Basic Stuff
+        #Opinion
+        opinion_modifier = {
+        	who = scope:target
+        	opinion_target = scope:owner
+        	min = -100
+        	max = 100
+        	multiplier = 0.2
+        	step = 2
+        }
+
+        # Is at War with owner
+        modifier = {
+            scope:target = {
+                is_at_war_with = scope:owner
+            }
+            add = -200
+        }
+
+        modifier = {
+            scope:target = {
+                is_landed = no
+                exists = liege
+                liege = {
+                    is_at_war_with = scope:owner
+                }
+            }
+            add = -50
+        }
+
+        modifier = {
+            scope:target = {
+                is_landed = yes
+                exists = liege
+                liege = {
+                    is_at_war_with = scope:owner
+                }
+            }
+            add = -100
+        }
+
+        modifier = {
+		    desc = ASK_FOR_CONVERSION_RECIPIENT_FERVOR
+		    scope:owner.faith.fervor != scope:target.faith.fervor
+		    add = {
+			    value = scope:owner.faith.fervor
+			    subtract = scope:target.faith.fervor
+			    multiply = 2.5
+		    }
+	    }
+	    # Piety Level of Owner
+	    modifier = {
+            desc = "+2 Piety Level 3"
+            scope:owner = {
+                piety_level = 3
+            }
+            add = {
+                value = 2
+            }
+        }
+        modifier = {
+            desc = "+5 Piety Level 4"
+            scope:owner = {
+                piety_level = 4
+            }
+            add = {
+                value = 5
+            }
+        }
+        modifier = {
+            desc = "+15 Piety Level 5"
+            scope:owner = {
+                piety_level = 5
+            }
+            add = {
+                value = 15
+            }
+        }
+        # Piety Level of Realm Priest
+        modifier = {
+            desc = "+2 Priest Piety Level 3"
+            scope:owner = {
+                any_councillor = {
+                    limit = {
+                        has_council_position = councillor_court_chaplain
+                    }
+                    piety_level = 3
+                }
+            }
+            add = {
+                value = 2
+            }
+        }
+        modifier = {
+            desc = "+15 Priest Piety Level 4"
+            scope:owner = {
+                any_councillor = {
+                    limit = {
+                        has_council_position = councillor_court_chaplain
+                    }
+                    piety_level = 4
+                }
+            }
+            add = {
+                value = 10
+            }
+        }
+        modifier = {
+            desc = "+40 Priest Piety Level 5"
+            scope:owner = {
+                any_councillor = {
+                    limit = {
+                        has_council_position = councillor_court_chaplain
+                    }
+                    piety_level = 5
+                }
+            }
+            add = {
+                value = 30
+            }
+        }
+        # Title of Target
+        modifier = {
+            desc = "-100 Target is Emperor"
+            exists = scope:target.primary_title
+            scope:target.primary_title.tier = tier_empire
+            add = -100
+        }
+        modifier = {
+            desc = "-50 Target is King"
+            exists = scope:target.primary_title
+            scope:target.primary_title.tier = tier_kingdom
+            add = -50
+        }
+        modifier = {
+            desc = "-25 Target is Duchy"
+            exists = scope:target.primary_title
+            scope:target.primary_title.tier = tier_duchy
+            add = -25
+        }
+        modifier = {
+            desc = "-15 Target is Baron"
+            exists = scope:target.primary_title
+            scope:target.primary_title.tier = tier_barony
+            add = -15
+        }
+        modifier = {
+            desc = "-10 Target is County"
+            exists = scope:target.primary_title
+            scope:target.primary_title.tier = tier_county
+            add = -10
+        }
+        # Targets faith
+        modifier = {
+            desc = "-10000 Is head of Faith"
+            scope:target = {
+                any_held_title = {
+                    is_head_of_faith = yes
+                }
+            }
+            add = -10000
+        }
+        modifier = {
+            desc = "-5 Target Piety Level 2"
+            scope:target = {
+                piety_level = 2
+            }
+            add = {
+                value = -5
+            }
+        }
+        modifier = {
+            desc = "-15 Target Piety Level 3"
+            scope:target = {
+                piety_level = 3
+            }
+            add = {
+                value = -25
+            }
+        }
+        modifier = {
+            desc = "-50 Target Piety Level 4"
+            scope:target = {
+                piety_level = 4
+            }
+            add = {
+                value = -50
+            }
+        }
+        modifier = {
+            desc = "-100 Target Piety Level 5"
+            scope:target = {
+                piety_level = 5
+            }
+            add = {
+                value = -100
+            }
+        }
+    }
+
+    on_monthly = {
+
+        save_scope_as = scheme
+        scheme_target = {
+            save_scope_as = target
+        }
+        scheme_owner = {
+            save_scope_as = owner
+            every_councillor = {
+                limit = {
+                    has_council_position = councillor_court_chaplain
+                }
+                save_scope_as = scheme_priest
+            }
+            if = {
+                limit = {
+                    scope:scheme = {
+                        NOT = { has_variable = had_initial_event }
+                    }
+                }
+                trigger_event = {
+                    on_action = missionary_start
+                }
+                scope:scheme = {
+                    set_variable = {
+                        name = had_initial_event
+                    }
+                }
+            }
+            else = {
+                trigger_event = {
+                    on_action = missionary_ongoing
+                }
+            }
+        }
+    }
+
+    allow = {
+        scope:target = {
+            NOT = {
+                faith = root.faith
+            }
+        }
+    }
+
+    valid = {
+        scope:target = {
+            NOT = {
+                faith = root.faith
+            }
+        }
+    }
+
+    on_ready = {
+
+        random = {
+            chance = scope:scheme.scheme_success_chance
+            debug_log = "missionary_end success"
+            set_variable = {
+                name = scheme_outcome_success
+                value = yes
+            }
+        }
+
+        random = {
+            chance = scope:scheme.scheme_success_chance
+            debug_log = "missionary_end plus"
+            set_variable = {
+                name = scheme_outcome_success_plus
+                value = yes
+            }
+        }
+
+        save_scope_as = scheme
+        scheme_target = {
+            save_scope_as = target
+        }
+        scheme_owner = {
+            save_scope_as = owner
+            every_councillor = {
+                limit = {
+                    has_council_position = councillor_court_chaplain
+                }
+                save_scope_as = scheme_priest
+            }
+            trigger_event = {
+                on_action = missionary_end
+            }
+        }
+    }
+
+    valid_agent = {
+        faith = scope:owner.faith
+    }
+
+    agent_success_chance = {
+        modifier = {
+            diplomacy > scope:target.diplomacy
+            add = {
+                value = diplomacy
+                subtract = scope:target.diplomacy
+            }
+        }
+        modifier = {
+            learning > scope:target.learning
+            add = {
+                value = learning
+                subtract = scope:target.learning
+            }
+        }
+        modifier = {
+            desc = "Piety Level 3"
+            piety_level = 3
+            add = {
+                value = 5
+            }
+        }
+        modifier = {
+            desc = "Piety Level 4"
+            piety_level = 4
+            add = {
+                value = 10
+            }
+        }
+        modifier = {
+            desc = "Piety Level 5"
+            piety_level = 5
+            add = {
+                value = 20
+            }
+        }
+
+        # Family Member has high influence
+        modifier = {
+            add = 15
+            is_close_family_of = scope:target
+        }
+        # The higher the hostility, the more the Agent will try
+        modifier = {
+            trigger = {
+                ai_zeal > 10
+                NOT = {
+                    faith = {
+                        faith_hostility_level = {
+                            target = scope:target.faith
+                            value = faith_fully_accepted_level
+                        }
+                    }
+                }
+            }
+            add = {
+                value = ai_zeal
+                if = {
+                    limit = {
+                        faith = {
+                            faith_hostility_level = {
+                                target = scope:target.faith
+                                value = faith_astray_level
+                            }
+                        }
+                    }
+                    multiply = 1
+                }
+                else = {
+                    multiply = 2
+                }
+            }
+            desc = SCHEME_ZEALOUS_AGAINST_HEATHEN
+        }
+        # Friends have high influence
+        modifier = {
+            add = 15
+            has_relation_friend = scope:target
+            desc = SCHEME_AGAINST_FRIEND
+        }
+        # Best Friends have even higher influence
+        modifier = {
+            add = 25
+            has_relation_best_friend = scope:target
+            desc = SCHEME_AGAINST_FRIEND
+        }
+        # Spouses have high influence
+        modifier = {
+            add = 25
+            trigger = {
+                ai_compassion >= 0
+                is_consort_of = scope:target
+            }
+            opinion = {
+                target = scope:target
+                value > low_positive_opinion
+            }
+            desc = SCHEME_AGAINST_SPOUSE
+        }
+        # Lovers have high influence
+        modifier = {
+            add = 25
+            has_relation_lover = scope:target
+        }
+    }
+
+    agent_join_chance = {
+        base = 0
+        # Higher Piety Level leads to more interest in converting other
+        modifier = {
+            desc = "Piety Level 3"
+            piety_level = 3
+            add = {
+                value = 5
+            }
+        }
+        modifier = {
+            desc = "Piety Level 4"
+            piety_level = 4
+            add = {
+                value = 15
+            }
+        }
+        modifier = {
+            desc = "Piety Level 5"
+            piety_level = 5
+            add = {
+                value = 50
+            }
+        }
+        # Bribe
+        modifier = {
+            add = bribe_acceptance_value
+            exists = scope:gift
+            always = scope:gift
+            NOT = {
+                OR = {
+                    scope:target = { is_parent_of = root }
+                    root = { is_parent_of = scope:target }
+                }
+            }
+            desc = "SCHEME_WITH_GIFT"
+        }
+        # Weak hook used
+        modifier = {
+        	exists = scope:hook
+        	scope:hook = yes
+        	add = 100
+        	desc = SCHEME_WEAK_HOOK_USED
+        }
+        # Want to convert family Member
+        modifier = {
+            add = 100
+            is_close_family_of = scope:target
+        }
+        # Cowards are less likely to convert others
+        modifier = {
+            trigger = {
+                ai_boldness < 0
+            }
+            add = {
+                value = ai_boldness
+            }
+            desc = SCHEME_I_AM_A_COWARD
+        }
+        # Intimidated
+        modifier = {
+            trigger = {
+                has_dread_level_towards = {
+                    target = scope:target
+                    level = 1
+                }
+            }
+            add = -500
+            desc = SCHEME_I_AM_INTIMIDATED
+        }
+        # Cowed
+        modifier = {
+            trigger = {
+                has_dread_level_towards = {
+                    target = scope:target
+                    level = 2
+                }
+            }
+            add = -1000
+            desc = SCHEME_I_AM_COWED
+        }
+        # Hostility against other faith
+        modifier = {
+            trigger = {
+                ai_zeal > 10
+                NOT = {
+                    faith = {
+                        faith_hostility_level = {
+                            target = scope:target.faith
+                            value = faith_fully_accepted_level
+                        }
+                    }
+                }
+            }
+            add = {
+                value = ai_zeal
+                if = {
+                    limit = {
+                        faith = {
+                            faith_hostility_level = {
+                                target = scope:target.faith
+                                value = faith_astray_level
+                            }
+                        }
+                    }
+                    multiply = 1
+                }
+                else = {
+                    multiply = 2
+                }
+            }
+            desc = SCHEME_ZEALOUS_AGAINST_HEATHEN
+        }
+        # Rivals do not want to convert each other
+        modifier = {
+            add = -100
+            has_relation_rival = scope:target
+            desc = SCHEME_AGAINST_RIVAL
+        }
+        # Nemesis do not want to convert each other
+        modifier = {
+            add = -1000
+            has_relation_nemesis = scope:target
+            desc = SCHEME_AGAINST_RIVAL
+        }
+        # Friends want to convert each other
+        modifier = {
+            add = 5
+            has_relation_friend = scope:target
+            desc = SCHEME_AGAINST_FRIEND
+        }
+        # Best Friends want to convert each other
+        modifier = {
+            add = 10
+            has_relation_best_friend = scope:target
+            desc = SCHEME_AGAINST_FRIEND
+        }
+        # Spouses want to convert each other
+        modifier = {
+            add = 10
+            trigger = {
+                ai_compassion >= 0
+                is_consort_of = scope:target
+            }
+            opinion = {
+                target = scope:target
+                value > low_positive_opinion
+            }
+            desc = SCHEME_AGAINST_SPOUSE
+        }
+        # Lovers want to convert each other
+        modifier = {
+            add = 5
+            has_relation_lover = scope:target
+        }
+
+    }
+}

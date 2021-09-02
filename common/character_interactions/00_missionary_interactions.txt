@@ -1,0 +1,59 @@
+missionary_interaction = {
+    category = interaction_category_friendly
+
+    interface_priority = 90
+    scheme = missionary_scheme
+
+    send_name = START_SCHEME
+
+    desc = "Send Religious Mission"
+    common_interaction = yes
+
+    is_shown = {
+        NOT = {
+            scope:actor = scope:recipient
+            scope:actor.faith = scope:recipient.faith
+        }
+    }
+
+    valid = {
+        NOT = {
+            scope:actor = scope:recipient
+            scope:actor.faith = scope:recipient.faith
+        }
+    }
+
+    #base_success_chance = {
+      #  base = 0
+
+     #   religion_demand_conversion_default_modifier = yes
+    #}
+
+    on_accept = {
+        hidden_effect = {
+            scope:actor = {
+                send_interface_toast = {
+                    title = "Send Religious Mission"
+                    left_icon = scope:actor
+                    right_icon = scope:recipient
+
+                    start_scheme = {
+                        type = missionary_scheme
+                        target = scope:recipient
+                        save_scope_as = missionary_scheme
+                    }
+
+                    # Need to add every Courtier (even better every character of the same faith in a range) to the possible Agents
+                    #scope:scheme = {
+                    #    scope:actor = {
+                    #        every_courtier = {
+                    #            add_piety = 10000
+                    #            #add_to_scheme = scope:missionary_scheme
+                    #        }
+                    #    }
+                    #}
+                }
+            }
+        }
+    }
+}

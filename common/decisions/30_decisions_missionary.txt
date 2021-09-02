@@ -1,0 +1,10 @@
+#send_missionary = {
+#	title = missionary_decision_name
+#	desc = missionary_decision_description
+#	is_shown = {
+#	    is_landed = yes
+#	}
+#	effect = {
+#        trigger_event = missionary.1
+#	}
+#}

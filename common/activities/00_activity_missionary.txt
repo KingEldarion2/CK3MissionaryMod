@@ -1,0 +1,17 @@
+#activity_missionary = {
+#    expiration_days = 300
+#    has_activity_window = yes
+#    days_until_auto_start = 20
+#    color = { 0.853906 0.867188 0.105469 1 }
+#    valid = {
+#    	activity_owner = {
+#    		is_alive = yes
+#    		is_imprisoned = no
+#    	}
+#    }
+#    on_spawn = {
+#        activity_owner = {
+#            trigger_event = missionary.1
+#        }
+#    }
+#}

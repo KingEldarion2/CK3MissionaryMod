@@ -1,0 +1,124 @@
+missionary_start = {
+    random_events = {
+        100 = missionary.1000
+    }
+}
+
+missionary_ongoing = {
+    trigger = {
+        exists = scope:scheme
+    }
+
+    random_events = {
+        1000 = 0
+        # Gains
+        150 = missionary.2000       # Target gains Interest
+        25 = missionary.2001        # A godly sign during Prayer
+        # Delays
+        # Fails
+        25 = missionary.4000        # Target ends Religious Mission
+        25 = missionary.4001        # Priest insults Target
+        1 = missionary.4002         # Solar eclipse during Prayer
+    }
+}
+
+missionary_end = {
+    #trigger = {
+    #    exists = scope:scheme
+    #}
+    first_valid_on_action = {
+        missionary_selection_success
+        missionary_selection_success_plus
+        missionary_selection_fail
+    }
+}
+
+missionary_end_success = {
+    random_events = {
+        100 = missionary.9000       # Simple success
+    }
+}
+
+missionary_selection_success = {
+    trigger = {
+        scope:scheme = {
+            has_variable = scheme_outcome_success
+        }
+    }
+    random_events = {
+        100 = missionary.9000       # Simple Success
+    }
+}
+
+missionary_selection_success_plus = {
+    trigger = {
+        scope:scheme = {
+            has_variable = scheme_outcome_success_plus
+        }
+    }
+    random_events = {
+        1 = missionary.9200     # monumental
+        15 = missionary.9201    # massive
+        50 = missionary.9202    # major
+        100 = missionary.9203   # medium
+        65 = missionary.9204    # minor
+        5 = missionary.9205     # tiny
+    }
+}
+
+missionary_selection_fail = {
+    random_events = {
+        100 = missionary.9100
+    }
+}
+
+#missionary_not_working = {
+#    debug_log = "missionary_end begin"
+#
+#    random = {
+#        chance = scope:scheme.scheme_success_chance
+#        debug_log = "missionary_end success"
+#        save_scope_value_as = {
+#            name = missionary_success
+#        }
+#    }
+#    if = {
+#        limit = {
+#            exists = scope:missionary_success
+#        }
+#        scope:owner = {
+#            debug_log = "missionary_end sucess trigger"
+#            trigger_event = {
+#                trigger_event = missionary.9000
+#            }
+#        }
+#    }
+#    else = {
+#        random = {
+#            chance = scope:scheme.scheme_success_chance
+#            debug_log = "missionary_end sucplus"
+#            save_scope_value_as = {
+#                name = missionary_success_plus
+#            }
+#        }
+#        if = {
+#            limit = {
+#                exists = scope:missionary_success_plus
+#            }
+#            scope:owner = {
+#                debug_log = "missionary_end sucplus trigger"
+#                random_events = {
+#                    100 = missionary.9200
+#                }
+#            }
+#        }
+#        else = {
+#            scope:owner = {
+#                debug_log = "missionary_end fail trigger"
+#                trigger_event = {
+#                    trigger_event = missionary.9100
+#                }
+#            }
+#        }
+#    }
+#}

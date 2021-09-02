@@ -1,0 +1,7 @@
+l_english:
+  missionary_decision_name:0 "Send Religious Mission"
+  missionary_decision_description:0 "Send out your most religious followers to bring more people into the Light of the true Faith."
+  missionary_event_prepare:0 "How do we want to pay for their efforts?"
+  missionary_event_prepare_money:0 "We will pay it from our own Pockets!"
+  missionary_event_prepare_religion:0 "Let the Faith pay for it!"
+  missionary_event_prepare_cancel:0 "I have changed my Mind!"

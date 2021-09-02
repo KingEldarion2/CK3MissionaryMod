@@ -1,0 +1,541 @@
+namespace = missionary
+
+###
+# 1xxx Prepare Religious Mission
+###
+missionary.1000 = {
+    type = character_event
+    theme = faith
+    desc = "The Missionaries are requesting some initial funds to begin with the religious mission."
+    option = {
+        name = "Let us show them that we lack for nothing"
+        scope:owner = {
+            remove_short_term_gold = massive_gold_value
+            add_piety = 50
+        }
+        scope:scheme = {
+            add_scheme_modifier = {
+                type = missionary_rich_arrival
+            }
+        }
+    }
+    option = {
+        name = "They shall have it!"
+        scope:owner = {
+            remove_short_term_gold = medium_gold_value
+            add_piety = 15
+        }
+    }
+    option = {
+        name = "It is their Duty to do it!"
+        scope:owner = {
+            add_piety = -250
+            add_prestige = -100
+        }
+        scope:scheme = {
+            add_scheme_modifier = {
+                type = missionary_poor_arrival
+            }
+        }
+    }
+    option = {
+        name = "This is too expensive!"
+        scope:scheme = {
+            end_scheme = yes
+        }
+    }
+}
+
+###
+# 2xxx Possible Gains
+###
+# 2000 - Target found interest in Religion
+missionary.2000 = {
+    type = character_event
+    theme = faith
+    desc = "The Target is really interested in the true Faith"
+    trigger = {
+        scope:scheme = {
+            NOT = { has_variable = had_missionary_2000_event }
+        }
+    }
+    immediate = {
+        scope:scheme = {
+            set_variable = {
+                name = had_missionary_2000_event
+                value = yes
+            }
+        }
+    }
+    option = {
+        name = "Sounds promising!"
+        scope:owner = {
+            add_piety = 10
+        }
+        scope:scheme_priest = {
+            add_piety = 35
+        }
+        scope:scheme = {
+            add_scheme_modifier = {
+                type = missionary_target_interested_modifier
+            }
+        }
+    }
+    option = {
+        name = "Then let us push it even further!"
+        scope:owner = {
+            add_piety = 15
+            remove_short_term_gold = activity_medium_gold_value
+        }
+        scope:scheme_priest = {
+            add_piety = 50
+        }
+        scope:scheme = {
+            add_scheme_progress = 2
+            add_scheme_modifier = {
+                type = missionary_target_interested_modifier
+            }
+        }
+    }
+}
+# 2001 - Godly sign during prayer
+missionary.2001 = {
+    type = character_event
+    theme = faith
+    desc = "Just as the Missionaries begin their prayer on the market, the sun broke through the thick clouds. And not a second after they finished, the clouds retake the light."
+    option = {
+        name = "Can't you see whose faith will guide you into the light?"
+        scope:scheme = {
+            add_scheme_modifier = {
+                type = missionary_godly_sign
+            }
+        }
+    }
+}
+
+###
+# 3xxx Delays
+###
+
+###
+# 4xxx Fails
+###
+# 4000 - You are thrown out
+missionary.4000 = {
+    type = character_event
+    theme = faith
+    desc = "Your Religious Mission was thrown out of the Country. And if you come back there may be consequences."
+    immediate = {
+        scope:scheme = {
+            add_scheme_progress = -3
+        }
+    }
+    option = {
+        name = "Time to go home"
+        scope:scheme = {
+            end_scheme = yes
+        }
+    }
+    option = {
+        name = "There is no going back!"
+        random_list = {
+            10 = {
+                scope:scheme_priest = {
+                        death = {
+                            killer = scope:target
+                            death_reason = death_execution
+                        }
+                }
+                scope:scheme = {
+                    end_scheme = yes
+                }
+            }
+            50 = {
+                rightfully_imprison_character_effect = {
+                	TARGET = scope:scheme_priest
+                	IMPRISONER = scope:target
+                }
+                scope:scheme = {
+                    end_scheme = yes
+                }
+            }
+            200 = {
+                scope:scheme = {
+                    end_scheme = yes
+                }
+            }
+            100 = {
+                scope:owner = {
+                    add_piety = 15
+                }
+                scope:scheme_priest = {
+                    add_piety = 50
+                }
+            }
+        }
+    }
+}
+# 4001 - Your Priest insulted the target
+missionary.4001 = {
+    type = character_event
+    theme = faith
+    desc = "Your Priest has lost his nerves and insulted all non (yet) believers"
+    immediate = {
+        add_scheme_progress = -2
+        scope:scheme_priest = {
+            add_prestige = -50
+            add_piety = -15
+        }
+        scope:scheme = {
+            set_variable = {
+                name = had_missionary_4001_event
+                value = yes
+            }
+            add_scheme_modifier = {
+                type = missionary_target_insulted_modifier
+            }
+        }
+    }
+    trigger = {
+        scope:scheme = {
+            NOT = { has_variable = had_missionary_4001_event }
+        }
+    }
+    option = {
+        name = "You idiot!"
+    }
+}
+# 4002 - A Sign from the Devil himself
+missionary.4002 = {
+    type = character_event
+    theme = faith
+    desc = "Just as the missionaries begin their Prayers on the market, the world darkens. A shadow moves before the Sun and hides it from the World. A sure sign of the evil powers in this world."
+    immediate = {
+        scope:scheme = {
+            add_scheme_modifier = {
+                type = missionary_devil_sign
+            }
+        }
+    }
+    option = {
+        name = "Just a coincidence!"
+    }
+}
+
+###
+# 9xxx Outcomes
+###
+# 9000 The landed target converts with his vassals and countries
+missionary.9000 = {
+    type = character_event
+    theme = faith
+    desc = "A whole Realm found into the Light."
+
+    left_portrait = scope:target
+
+    option = {
+        name = "Welcome to the Light!"
+
+        scope:target = {
+            save_scope_as = recipient
+        }
+
+        scope:owner = {
+            save_scope_as = actor
+        }
+
+        scope:target = {
+            missionary_convert_target = yes
+            missionary_convert_spouses = yes
+            missionary_convert_family_in_court = yes
+        }
+
+        scope:target = {
+            missionary_convert_courtiers = yes
+            missionary_convert_vassal = yes
+            missionary_convert_province = yes
+        }
+
+        scope:owner = {
+            add_piety = 250
+        }
+
+        scope:scheme = {
+            end_scheme = yes
+        }
+    }
+}
+
+# 9100 - Mission failed
+missionary.9100 = {
+    type = character_event
+    theme = faith
+    desc = "The Religious mission was no success."
+    option = {
+        name = "I will extend this mission until we succeed!"
+        scope:owner = {
+            remove_short_term_gold = activity_medium_gold_value
+        }
+        scope:scheme = {
+            add_scheme_progress = -10
+        }
+    }
+    option = {
+        name = "To hell with these heathens!"
+        scope:scheme = {
+            end_scheme = yes
+        }
+    }
+}
+
+# 920x Financial Aids
+# 9200 - Target wants monumental financial Aid
+missionary.9200 = {
+    type = character_event
+    theme = faith
+    desc = "Money is needed for the conversion"
+    option = {
+        name = "Whatever it will cost!"
+        scope:owner = {
+            remove_short_term_gold = monumental_gold_value
+            add_piety = 500
+            add_prestige = 100
+        }
+        trigger_event = missionary.9000
+    }
+    option = {
+        name = "Let me look into the financials myself"
+        missionary_payment_stewardship = {
+            money_good = massive_gold_value
+            money_original = monumental_gold_value
+            money_bad = monumental_gold_value
+            prestige_good = 100
+            prestige_original = 150
+            prestige_bad = 0
+            piety_good = 350
+            piety_original = 500
+            piety_bad = 150
+        }
+        scope:owner = {
+            trigger_event = {
+                on_action = missionary_end_success
+            }
+        }
+    }
+    option = {
+        name = "I will not pay for that!"
+        scope:owner = {
+            add_piety = -150
+            add_prestige = -150
+        }
+        scope:scheme  = {
+            end_scheme = yes
+        }
+    }
+}
+
+# 9201 - Target wants massive financial Aid
+missionary.9201 = {
+    type = character_event
+    theme = faith
+    desc = "Money is needed for the conversion"
+    option = {
+        name = "Whatever it will cost!"
+        scope:owner = {
+            remove_short_term_gold = massive_gold_value
+            add_piety = 250
+            add_prestige = 75
+        }
+        trigger_event = missionary.9000
+    }
+    option = {
+        name = "Let me look into the financials myself"
+        missionary_payment_stewardship = {
+            money_good = major_gold_value
+            money_original = massive_gold_value
+            money_bad = monumental_gold_value
+            prestige_good = 50
+            prestige_original = 75
+            prestige_bad = 0
+            piety_good = 200
+            piety_original = 250
+            piety_bad = 250
+        }
+        scope:owner = {
+            trigger_event = {
+                on_action = missionary_end_success
+            }
+        }
+    }
+    option = {
+        name = "I will not pay for that!"
+        scope:owner = {
+            add_piety = -150
+            add_prestige = -150
+        }
+        scope:scheme  = {
+            end_scheme = yes
+        }
+    }
+}
+
+# 9202 - Target wants major financial Aid
+missionary.9202 = {
+    type = character_event
+    theme = faith
+    desc = "Money is needed for the conversion"
+    option = {
+        name = "Whatever it will cost!"
+        scope:owner = {
+            remove_short_term_gold = major_gold_value
+            add_piety = 200
+            add_prestige = 50
+        }
+        trigger_event = missionary.9000
+    }
+    option = {
+        name = "Let me look into the financials myself"
+        missionary_payment_stewardship = {
+            money_good = medium_gold_value
+            money_original = major_gold_value
+            money_bad = massive_gold_value
+            prestige_good = 35
+            prestige_original = 50
+            prestige_bad = 0
+            piety_good = 150
+            piety_original = 200
+            piety_bad = 200
+        }
+        scope:owner = {
+            trigger_event = {
+                on_action = missionary_end_success
+            }
+        }
+    }
+    option = {
+        name = "I will not pay for that!"
+        scope:owner = {
+            add_piety = -150
+            add_prestige = -150
+        }
+        scope:scheme  = {
+            end_scheme = yes
+        }
+    }
+}
+
+# 9203 - Target wants medium financial Aid
+missionary.9203 = {
+    type = character_event
+    theme = faith
+    desc = "Money is needed for the conversion"
+    option = {
+        name = "Whatever it will cost!"
+        scope:owner = {
+            remove_short_term_gold = medium_gold_value
+            add_piety = 150
+            add_prestige = 35
+        }
+        trigger_event = missionary.9000
+    }
+    option = {
+        name = "Let me look into the financials myself"
+        missionary_payment_stewardship = {
+            money_good = minor_gold_value
+            money_original = medium_gold_value
+            money_bad = major_gold_value
+            prestige_good = 20
+            prestige_original = 35
+            prestige_bad = 0
+            piety_good = 125
+            piety_original = 150
+            piety_bad = 150
+        }
+        scope:owner = {
+            trigger_event = {
+                on_action = missionary_end_success
+            }
+        }
+    }
+    option = {
+        name = "I will not pay for that!"
+        scope:owner = {
+            add_piety = -150
+            add_prestige = -150
+        }
+        scope:scheme  = {
+            end_scheme = yes
+        }
+    }
+}
+
+# 9204 - Target wants minor financial Aid
+missionary.9204 = {
+    type = character_event
+    theme = faith
+    desc = "Money is needed for the conversion"
+    option = {
+        name = "Whatever it will cost!"
+        scope:owner = {
+            remove_short_term_gold = minor_gold_value
+            add_piety = 125
+            add_prestige = 20
+        }
+        trigger_event = missionary.9000
+    }
+    option = {
+        name = "Let me look into the financials myself"
+        missionary_payment_stewardship = {
+            money_good = tiny_gold_value
+            money_original = minor_gold_value
+            money_bad = medium_gold_value
+            prestige_good = 15
+            prestige_original = 20
+            prestige_bad = 0
+            piety_good = 100
+            piety_original = 125
+            piety_bad = 125
+        }
+        scope:owner = {
+            trigger_event = {
+                on_action = missionary_end_success
+            }
+        }
+    }
+    option = {
+        name = "I will not pay for that!"
+        scope:owner = {
+            add_piety = -150
+            add_prestige = -150
+        }
+        scope:scheme  = {
+            end_scheme = yes
+        }
+    }
+}
+
+# 9205 - Target wants tiny financial Aid
+missionary.9205 = {
+    type = character_event
+    theme = faith
+    desc = "Money is needed for the conversion"
+    option = {
+        name = "Whatever it will cost!"
+        scope:owner = {
+            remove_short_term_gold = tiny_gold_value
+            add_piety = 100
+            add_prestige = 10
+        }
+        trigger_event = missionary.9000
+    }
+    option = {
+        name = "I will not pay for that!"
+        scope:owner = {
+            add_piety = -150
+            add_prestige = -150
+        }
+        scope:scheme  = {
+            end_scheme = yes
+        }
+    }
+}
