@@ -152,13 +152,12 @@ missionary_payment_stewardship = {
     duel = {
         skill = stewardship
         value = 12
-        desc = "Immediately"
         12 = {
             compare_modifier = {
                 value = scope:duel_value
                 multiplier = 1
             }
-            desc = "Cost reduction"
+            desc = "missionary.effects.payment_stewardship.cost_reduction"
             show_as_tooltip = {
                 scope:owner =  {
                     remove_short_term_gold = $money_good$
@@ -168,7 +167,7 @@ missionary_payment_stewardship = {
             }
         }
         20 = {
-            desc = "Initial Cost"
+            desc = "missionary.effects.payment_stewardship.cost_initial"
             show_as_tooltip = {
                 scope:owner = {
                     remove_short_term_gold = $money_original$
@@ -182,7 +181,7 @@ missionary_payment_stewardship = {
                 value = scope:duel_value
                 multiplier = -1
             }
-            desc = "Additional Costs"
+            desc = "missionary.effects.payment_stewardship.cost_additional"
             show_as_tooltip = {
                 scope:owner = {
                     remove_short_term_gold = $money_bad$

@@ -1,0 +1,101 @@
+missionary_scheme_missionary_modifier = {
+	$missionary_char$ = {
+		# traits
+		modifier = {
+			has_trait = gregarious
+			add = 5
+		}
+		modifier = {
+			has_trait = humble
+			add = 5
+		}
+		modifier = {
+			has_trait = patient
+			add = 5
+		}
+		modifier = {
+			has_trait = compassionate
+			add = 5
+		}
+		modifier = {
+			has_trait = impatient
+			add = -5
+		}
+		modifier = {
+			has_trait = craven
+			add = -5
+		}
+		modifier = {
+			has_trait = lazy
+			add = -5
+		}
+		modifier = {
+			has_trait = diligent
+			add = 5
+		}
+		modifier = {
+			has_trait = shy
+			add = -5
+		}
+		modifier = {
+			has_trait = zealous
+			add = -5
+		}
+		modifier = {
+			has_trait = cynical
+			add = -5
+		}
+		modifier = {
+			has_trait = melancholic
+			add = -5
+		}
+		modifier = {
+			has_trait = lunatic
+			add = -5
+		}
+		modifier = {
+			has_trait = possessed
+			add = -5
+		}
+		modifier = {
+			has_trait = shrewd
+			add = 5
+		}
+		modifier = {
+			has_trait = gallant
+			add = 5
+		}
+		modifier = {
+			has_trait = holy_warrior
+			add = 10
+		}
+		modifier = {
+			has_trait = excommunicated
+			add = -5
+		}
+		modifier = {
+			has_trait = pilgrim
+			add = 5
+		}
+		modifier = {
+			has_trait = devoted
+			add = 10
+		}
+		modifier = {
+			has_trait = crusader_king
+			add = 25
+		}
+		modifier = {
+			has_trait = order_member
+			add = 15
+		}
+		modifier = {
+			has_trait = faith_warrior
+			add = 15
+		}
+		modifier = {
+			has_trait = saint
+			add = 25
+		}
+	}
+}

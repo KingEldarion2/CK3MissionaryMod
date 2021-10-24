@@ -4,9 +4,10 @@ missionary_scheme = {
 
     uses_agents = yes
     agent_join_threshold = 10
-    agent_leave_threshold = 5
+    agent_leave_threshold = -100
 
     power_per_skill_point = 100
+    power_per_agent_skill_point = 1
     power_per_agent_skill_point = 1
     resistance_per_skill_point = 1
 
@@ -14,96 +15,90 @@ missionary_scheme = {
     maximum_progress_chance = 100
     maximum_success = 100
 
+    success_desc = "missionary_success_desc"
+    
     cooldown = {
         years = 5
     }
 
     base_success_chance = {
-
-         inside
-
+        
+        # $VALUE|=0P$
+        #Also if you use localization for the desc you can use $VALUE|=0P$ to dynamically pick up on what value is actually added
+        #If you use straight up literal quotes it will work but also log errors in your error log
+        #= means to show a + or - in front of the number
+        #P means that a positive number is green
+        
         # Calculate Success Chance
         base = -10
-
-        # Faith Hostility
-        #modifier = {
-        #    scope:target.faith = {
-        #        faith_hostility_level = {
-        #            target = scope:owner.faith
-        #            value = faith_fully_accepted_level
-        #        }
-        #    }
-        #    add = {
-        #        value = 5
-        #    }
-        #}
-
-        modifier = {
-            scope:target.faith = {
-                faith_hostility_level = {
-                    target = scope:owner.faith
-                    value = faith_astray_level
-                }
-            }
-            add = {
-                value = -5
-            }
-        }
-
-        modifier = {
-            scope:target.faith = {
-                faith_hostility_level = {
-                    target = scope:owner.faith
-                    value = faith_hostile_level
-                }
-            }
-            add = {
-                value = -25
-            }
-        }
-
-        modifier = {
-            scope:target.faith = {
-                faith_hostility_level = {
-                    target = scope:owner.faith
-                    value = faith_evil_level
-                }
-            }
-            add = {
-                value = -50
-            }
-        }
-
+        
         # Character Values
         modifier = {
             scope:owner.learning != scope:target.learning
+            desc = missionary.modifier.learning.owner
             add = {
                 value = scope:owner.learning
                 subtract = scope:target.learning
+                multiply = 2
             }
         }
 
         modifier = {
             scope:owner.diplomacy != scope:target.diplomacy
+            desc = missionary.modifier.diplomacy.owner
             add = {
                 value = scope:owner.diplomacy
                 subtract = scope:target.diplomacy
+                multiply = 2
             }
         }
+
+        modifier = {
+            scope:owner.cp:councillor_court_chaplain.diplomacy != scope:target.diplomacy
+            desc = missionary.modifier.learning.priest
+            add = {
+                value = scope:owner.cp:councillor_court_chaplain.diplomacy
+                subtract = scope:target.diplomacy
+                multiply = 2
+            }
+        }
+        
+        modifier = {
+            scope:owner.cp:councillor_court_chaplain.learning != scope:target.learning#
+            desc = missionary.modifier.diplomacy.priest
+            add = {
+                value = scope:owner.cp:councillor_court_chaplain.learning
+                subtract = scope:target.learning
+                multiply = 2
+            }
+        }
+        
+        #scope:owner = {
+        #    missionary_scheme_missionary_modifier = {
+        #        missionary_char = scope:owner
+        #    }
+        #}
+        #
+        #scope:owner.cp:councillor_court_chaplain = {
+        #    missionary_scheme_missionary_modifier = {
+        #        missionary_char = scope:owner.cp:councillor_court_chaplain
+        #    }
+        #}
 
         # Basic Stuff
         #Opinion
         opinion_modifier = {
-        	who = scope:target
-        	opinion_target = scope:owner
-        	min = -100
-        	max = 100
-        	multiplier = 0.2
-        	step = 2
+            who = scope:target
+            opinion_target = scope:owner
+            min = -100
+            max = 100
+            multiplier = 0.2
+            step = 2
         }
 
         # Is at War with owner
         modifier = {
+            desc = missionary.modifier.at_war
             scope:target = {
                 is_at_war_with = scope:owner
             }
@@ -111,6 +106,7 @@ missionary_scheme = {
         }
 
         modifier = {
+            desc = missionary.modifier.at_war
             scope:target = {
                 is_landed = no
                 exists = liege
@@ -122,6 +118,7 @@ missionary_scheme = {
         }
 
         modifier = {
+            desc = missionary.modifier.at_war
             scope:target = {
                 is_landed = yes
                 exists = liege
@@ -132,18 +129,20 @@ missionary_scheme = {
             add = -100
         }
 
+        # Fervor
         modifier = {
-		    desc = ASK_FOR_CONVERSION_RECIPIENT_FERVOR
-		    scope:owner.faith.fervor != scope:target.faith.fervor
-		    add = {
-			    value = scope:owner.faith.fervor
-			    subtract = scope:target.faith.fervor
-			    multiply = 2.5
-		    }
-	    }
-	    # Piety Level of Owner
-	    modifier = {
-            desc = "+2 Piety Level 3"
+            desc = missionary.modifier.fervor
+            scope:owner.faith.fervor != scope:target.faith.fervor
+            add = {
+                value = scope:owner.faith.fervor
+                subtract = scope:target.faith.fervor
+                multiply = 2.5
+            }
+        }
+        
+        # Piety Level of Owner
+        modifier = {
+            desc = "missionary.modifier.piety_level.owner"
             scope:owner = {
                 piety_level = 3
             }
@@ -152,7 +151,7 @@ missionary_scheme = {
             }
         }
         modifier = {
-            desc = "+5 Piety Level 4"
+            desc = "missionary.modifier.piety_level.owner"
             scope:owner = {
                 piety_level = 4
             }
@@ -161,7 +160,7 @@ missionary_scheme = {
             }
         }
         modifier = {
-            desc = "+15 Piety Level 5"
+            desc = "missionary.modifier.piety_level.owner"
             scope:owner = {
                 piety_level = 5
             }
@@ -171,42 +170,27 @@ missionary_scheme = {
         }
         # Piety Level of Realm Priest
         modifier = {
-            desc = "+2 Priest Piety Level 3"
-            scope:owner = {
-                any_councillor = {
-                    limit = {
-                        has_council_position = councillor_court_chaplain
-                    }
-                    piety_level = 3
-                }
+            desc = "missionary.modifier.piety_level.priest"
+            scope:owner.cp:councillor_court_chaplain = {
+                piety_level = 3
             }
             add = {
                 value = 2
             }
         }
         modifier = {
-            desc = "+15 Priest Piety Level 4"
-            scope:owner = {
-                any_councillor = {
-                    limit = {
-                        has_council_position = councillor_court_chaplain
-                    }
-                    piety_level = 4
-                }
+            desc = "missionary.modifier.piety_level.priest"
+            scope:owner.cp:councillor_court_chaplain = {
+                piety_level = 4
             }
             add = {
                 value = 10
             }
         }
         modifier = {
-            desc = "+40 Priest Piety Level 5"
-            scope:owner = {
-                any_councillor = {
-                    limit = {
-                        has_council_position = councillor_court_chaplain
-                    }
-                    piety_level = 5
-                }
+            desc = "missionary.modifier.piety_level.priest"
+            scope:owner.cp:councillor_court_chaplain = {
+                piety_level = 5
             }
             add = {
                 value = 30
@@ -214,38 +198,38 @@ missionary_scheme = {
         }
         # Title of Target
         modifier = {
-            desc = "-100 Target is Emperor"
+            desc = "missionary.modifier.target.primary_title"
             exists = scope:target.primary_title
             scope:target.primary_title.tier = tier_empire
             add = -100
         }
         modifier = {
-            desc = "-50 Target is King"
+            desc = "missionary.modifier.target.primary_title"
             exists = scope:target.primary_title
             scope:target.primary_title.tier = tier_kingdom
             add = -50
         }
         modifier = {
-            desc = "-25 Target is Duchy"
+            desc = "missionary.modifier.target.primary_title"
             exists = scope:target.primary_title
             scope:target.primary_title.tier = tier_duchy
             add = -25
         }
         modifier = {
-            desc = "-15 Target is Baron"
+            desc = "missionary.modifier.target.primary_title"
             exists = scope:target.primary_title
             scope:target.primary_title.tier = tier_barony
             add = -15
         }
         modifier = {
-            desc = "-10 Target is County"
+            desc = "missionary.modifier.target.primary_title"
             exists = scope:target.primary_title
             scope:target.primary_title.tier = tier_county
             add = -10
         }
         # Targets faith
         modifier = {
-            desc = "-10000 Is head of Faith"
+            desc = "missionary.modifier.target.head_of_faith"
             scope:target = {
                 any_held_title = {
                     is_head_of_faith = yes
@@ -254,7 +238,7 @@ missionary_scheme = {
             add = -10000
         }
         modifier = {
-            desc = "-5 Target Piety Level 2"
+            desc = "missionary.modifier.piety_level.target"
             scope:target = {
                 piety_level = 2
             }
@@ -263,7 +247,7 @@ missionary_scheme = {
             }
         }
         modifier = {
-            desc = "-15 Target Piety Level 3"
+            desc = "missionary.modifier.piety_level.target"
             scope:target = {
                 piety_level = 3
             }
@@ -272,7 +256,7 @@ missionary_scheme = {
             }
         }
         modifier = {
-            desc = "-50 Target Piety Level 4"
+            desc = "missionary.modifier.piety_level.target"
             scope:target = {
                 piety_level = 4
             }
@@ -281,13 +265,98 @@ missionary_scheme = {
             }
         }
         modifier = {
-            desc = "-100 Target Piety Level 5"
+            desc = "missionary.modifier.piety_level.target"
             scope:target = {
                 piety_level = 5
             }
             add = {
                 value = -100
             }
+        }
+        
+        # Faith Hostility
+        modifier = {
+            desc = "missionary.modifier.target.faith_hostility"
+            scope:target.faith = {
+                faith_hostility_level = {
+                    target = scope:owner.faith
+                    value = faith_fully_accepted_level
+                }
+            }
+            add = {
+                value = 5
+            }
+        }
+        
+        modifier = {
+            desc = "missionary.modifier.target.faith_hostility"
+            scope:target.faith = {
+                faith_hostility_level = {
+                    target = scope:owner.faith
+                    value = faith_astray_level
+                }
+            }
+            add = {
+                value = -5
+            }
+        }
+        
+        modifier = {
+            desc = "missionary.modifier.target.faith_hostility"
+            scope:target.faith = {
+                faith_hostility_level = {
+                    target = scope:owner.faith
+                    value = faith_hostile_level
+                }
+            }
+            add = {
+                value = -25
+            }
+        }
+        
+        modifier = {
+            desc = "missionary.modifier.target.faith_hostility"
+            scope:target.faith = {
+                faith_hostility_level = {
+                    target = scope:owner.faith
+                    value = faith_evil_level
+                }
+            }
+            add = {
+                value = -50
+            }
+        }
+    }
+    
+    on_start = {
+        
+        save_scope_as = scheme
+        scheme_owner = {
+            save_scope_as = owner
+            scope:owner.cp:councillor_court_chaplain = {
+                save_scope_as = scheme_priest
+            }
+            set_variable = {
+                name = missionary_scheme
+                value = scope:scheme
+            }
+        }
+        
+        scope:scheme_priest = {
+            
+            #allow_in_scheme = scope:scheme
+            #add_to_scheme = scope:scheme
+            
+            
+            # Need to add every Courtier (even better every character of the same faith in a range) to the possible Agents
+            ##scope:scheme = {
+            ##    scope:actor = {
+            ##        every_courtier = {
+            ##            add_piety = 10000
+            ##            #add_to_scheme = scope:missionary_scheme
+            ##        }
+            ##    }
+            ##}
         }
     }
 
@@ -332,6 +401,10 @@ missionary_scheme = {
         scope:target = {
             NOT = {
                 faith = root.faith
+            }
+            OR = {
+                age >= 16
+                is_ruler = yes
             }
         }
     }
@@ -402,24 +475,24 @@ missionary_scheme = {
             }
         }
         modifier = {
-            desc = "Piety Level 3"
+            desc = "missionary.modifier.piety_level.agent"
             piety_level = 3
+            add = {
+                value = 2
+            }
+        }
+        modifier = {
+            desc = "missionary.modifier.piety_level.agent"
+            piety_level = 4
             add = {
                 value = 5
             }
         }
         modifier = {
-            desc = "Piety Level 4"
-            piety_level = 4
-            add = {
-                value = 10
-            }
-        }
-        modifier = {
-            desc = "Piety Level 5"
+            desc = "missionary.modifier.piety_level.agent"
             piety_level = 5
             add = {
-                value = 20
+                value = 10
             }
         }
 
@@ -429,52 +502,52 @@ missionary_scheme = {
             is_close_family_of = scope:target
         }
         # The higher the hostility, the more the Agent will try
-        modifier = {
-            trigger = {
-                ai_zeal > 10
-                NOT = {
-                    faith = {
-                        faith_hostility_level = {
-                            target = scope:target.faith
-                            value = faith_fully_accepted_level
-                        }
-                    }
-                }
-            }
-            add = {
-                value = ai_zeal
-                if = {
-                    limit = {
-                        faith = {
-                            faith_hostility_level = {
-                                target = scope:target.faith
-                                value = faith_astray_level
-                            }
-                        }
-                    }
-                    multiply = 1
-                }
-                else = {
-                    multiply = 2
-                }
-            }
-            desc = SCHEME_ZEALOUS_AGAINST_HEATHEN
-        }
+        #modifier = {
+        #    trigger = {
+        #        ai_zeal > 10
+        #        NOT = {
+        #            faith = {
+        #                faith_hostility_level = {
+        #                    target = scope:target.faith
+        #                    value = faith_fully_accepted_level
+        #                }
+        #            }
+        #        }
+        #    }
+        #    add = {
+        #        value = ai_zeal
+        #        if = {
+        #            limit = {
+        #                faith = {
+        #                    faith_hostility_level = {
+        #                        target = scope:target.faith
+        #                        value = faith_astray_level
+        #                    }
+        #                }
+        #            }
+        #            multiply = 1
+        #        }
+        #        else = {
+        #            multiply = 2
+        #        }
+        #    }
+        #    desc = SCHEME_ZEALOUS_AGAINST_HEATHEN
+        #}
         # Friends have high influence
         modifier = {
-            add = 15
+            add = 10
             has_relation_friend = scope:target
             desc = SCHEME_AGAINST_FRIEND
         }
         # Best Friends have even higher influence
         modifier = {
-            add = 25
+            add = 15
             has_relation_best_friend = scope:target
             desc = SCHEME_AGAINST_FRIEND
         }
         # Spouses have high influence
         modifier = {
-            add = 25
+            add = 15
             trigger = {
                 ai_compassion >= 0
                 is_consort_of = scope:target
@@ -487,9 +560,15 @@ missionary_scheme = {
         }
         # Lovers have high influence
         modifier = {
-            add = 25
+            add = 15
             has_relation_lover = scope:target
         }
+        
+        #save_scope_as = agent <-- Error.log => save_scope_as not working for MTTH
+        
+        #missionary_scheme_missionary_modifier = {
+        #    missionary_char = scope:agent
+        #}
     }
 
     agent_join_chance = {
@@ -531,10 +610,10 @@ missionary_scheme = {
         }
         # Weak hook used
         modifier = {
-        	exists = scope:hook
-        	scope:hook = yes
-        	add = 100
-        	desc = SCHEME_WEAK_HOOK_USED
+            exists = scope:hook
+            scope:hook = yes
+            add = 100
+            desc = SCHEME_WEAK_HOOK_USED
         }
         # Want to convert family Member
         modifier = {
@@ -647,6 +726,13 @@ missionary_scheme = {
             add = 5
             has_relation_lover = scope:target
         }
-
+    }
+    
+    on_invalidated = {
+    
+        scheme_owner = {
+            
+            remove_variable = missionary_scheme
+        }
     }
 }

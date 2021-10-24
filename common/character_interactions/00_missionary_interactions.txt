@@ -1,46 +1,40 @@
 missionary_interaction = {
-    category = interaction_category_friendly
+    category = interaction_category_religion
 
     interface_priority = 90
     scheme = missionary_scheme
 
     send_name = START_SCHEME
 
-    desc = "Send Religious Mission"
+    desc = "missionary.interaction.send_mission.desc"
     common_interaction = yes
+    ignores_pending_interaction_block = yes
 
+    auto_accept = yes
+    
     is_shown = {
         NOT = {
-            scope:actor = scope:recipient
             scope:actor.faith = scope:recipient.faith
         }
-    }
-
-    valid = {
-        NOT = {
-            scope:actor = scope:recipient
-            scope:actor.faith = scope:recipient.faith
+        OR = {
+            scope:recipient.age >= 16
+            scope:recipient = {
+                is_ruler = yes
+            }
         }
     }
-
-    #base_success_chance = {
-      #  base = 0
-
-     #   religion_demand_conversion_default_modifier = yes
-    #}
 
     on_accept = {
         hidden_effect = {
             scope:actor = {
                 send_interface_toast = {
-                    title = "Send Religious Mission"
+                    title = "missionary.interaction.send_mission.toast"
                     left_icon = scope:actor
                     right_icon = scope:recipient
-
+                    
                     start_scheme = {
                         type = missionary_scheme
                         target = scope:recipient
-                        save_scope_as = missionary_scheme
                     }
 
                     # Need to add every Courtier (even better every character of the same faith in a range) to the possible Agents
@@ -53,6 +47,349 @@ missionary_interaction = {
                     #    }
                     #}
                 }
+            }
+        }
+    }
+}
+
+missionary_add_agent_interaction = {
+    
+    category = interaction_category_religion
+    
+    interface_priority = 90
+    
+    desc = "missionary.interaction.add_agent.desc"
+    common_interaction = yes
+    send_options_exclusive = no
+    
+    is_shown = {
+        scope:recipient = {
+            faith = scope:actor.faith
+        }
+        scope:actor = {
+            has_variable = missionary_scheme
+            var:missionary_scheme = {
+                NOT = {
+                    any_scheme_agent = {
+                        this = scope:recipient
+                    }
+                }
+            }
+        }
+    }
+    
+    ai_accept = {
+        
+        base = -50
+        
+        # Piety level
+        modifier = {
+            desc = "missionary.modifier.piety_level.recipient"
+            piety_level = 3
+            add = 5
+        }
+        modifier = {
+            desc = "missionary.modifier.piety_level.recipient"
+            piety_level = 4
+            add = 15
+        }
+        modifier = {
+            desc = "missionary.modifier.piety_level.recipient"
+            piety_level = 5
+            add = 50
+        }
+        
+        # Hooks
+        modifier = {
+            scope:use_hook = yes
+            add = 50
+            desc = "SCHEME_WEAK_HOOK_USED"
+        }
+        
+        modifier = {
+            scope:additional_hook = yes
+            add = 50
+            desc = "SCHEME_WEAK_HOOK_GRANTED"
+        }
+        
+        modifier = {
+            scope:additional_payment = yes
+            add = 25
+            desc = "missionary.interaction.add_agent.additional_payment.modifier"
+        }
+    
+        # Their Devotion
+        modifier = {
+            piety_level = 0
+            add = -100
+            desc = "missionary.modifier.piety_level.recipient"
+        }
+    
+        modifier = {
+            piety_level = 1
+            add = -50
+            desc = "missionary.modifier.piety_level.recipient"
+        }
+    
+        modifier = {
+            piety_level = 2
+            add = -25
+            desc = "missionary.modifier.piety_level.recipient"
+        }
+    
+        modifier = {
+            piety_level = 3
+            add = 0
+            desc = "missionary.modifier.piety_level.recipient"
+        }
+    
+        modifier = {
+            piety_level = 4
+            add = 15
+            desc = "missionary.modifier.piety_level.recipient"
+        }
+    
+        modifier = {
+            piety_level = 5
+            add = 25
+            desc = "missionary.modifier.piety_level.recipient"
+        }
+        
+        # Demand Religious Duty scales with piety level of actor and recipient
+        # Recipient
+        modifier = {
+            scope:demand_religious_duty = yes
+            piety_level = 0
+            add = -100
+            desc = "missionary.interaction.add_agent.demand_religious_duty.modifier_they"
+        }
+        
+        modifier = {
+            scope:demand_religious_duty = yes
+            piety_level = 1
+            add = 0
+            desc = "missionary.interaction.add_agent.demand_religious_duty.modifier_they"
+        }
+        
+        modifier = {
+            scope:demand_religious_duty = yes
+            piety_level = 2
+            add = 5
+            desc = "missionary.interaction.add_agent.demand_religious_duty.modifier_they"
+        }
+    
+        modifier = {
+            scope:demand_religious_duty = yes
+            piety_level = 3
+            add = 10
+            desc = "missionary.interaction.add_agent.demand_religious_duty.modifier_they"
+        }
+    
+        modifier = {
+            scope:demand_religious_duty = yes
+            piety_level = 4
+            add = 20
+            desc = "missionary.interaction.add_agent.demand_religious_duty.modifier_they"
+        }
+        
+        modifier = {
+            scope:demand_religious_duty = yes
+            piety_level = 5
+            add = 50
+            desc = "missionary.interaction.add_agent.demand_religious_duty.modifier_they"
+        }
+    
+        # actor
+        modifier = {
+            scope:demand_religious_duty = yes
+            scope:actor.piety_level = 0
+            add = -100
+            desc = "missionary.interaction.add_agent.demand_religious_duty.modifier_you"
+        }
+    
+        modifier = {
+            scope:demand_religious_duty = yes
+            scope:actor.piety_level = 1
+            add = -50
+            desc = "missionary.interaction.add_agent.demand_religious_duty.modifier_you"
+        }
+        
+        modifier = {
+            scope:demand_religious_duty = yes
+            scope:actor.piety_level = 2
+            add = 0
+            desc = "missionary.interaction.add_agent.demand_religious_duty.modifier_you"
+        }
+    
+        modifier = {
+            scope:demand_religious_duty = yes
+            scope:actor.piety_level = 3
+            add = 5
+            desc = "missionary.interaction.add_agent.demand_religious_duty.modifier_you"
+        }
+    
+        modifier = {
+            scope:demand_religious_duty = yes
+            scope:actor.piety_level = 4
+            add = 10
+            desc = "missionary.interaction.add_agent.demand_religious_duty.modifier_you"
+        }
+    
+        modifier = {
+            scope:demand_religious_duty = yes
+            scope:actor.piety_level = 5
+            add = 15
+            desc = "missionary.interaction.add_agent.demand_religious_duty.modifier_you"
+        }
+        
+        modifier = {
+            scope:actor = {
+                any_held_title = {
+                    is_head_of_faith = yes
+                }
+            }
+            add = 25
+            desc = "missionary.interaction.add_agent.demand_religious_duty.modifier_hof"
+        }
+        
+        # Traits
+        modifier = {
+            has_trait = humble
+            add = 5
+        }
+        modifier = {
+            has_trait = craven
+            add = -50
+        }
+        modifier = {
+            has_trait = lazy
+            add = -50
+        }
+        modifier = {
+            has_trait = shy
+            add = -50
+        }
+        modifier = {
+            has_trait = holy_warrior
+            add = 10
+        }
+        modifier = {
+            has_trait = excommunicated
+            add = -25
+        }
+        modifier = {
+            has_trait = pilgrim
+            add = 15
+        }
+        modifier = {
+            has_trait = devoted
+            add = 50
+        }
+        modifier = {
+            has_trait = order_member
+            add = 25
+        }
+        modifier = {
+            has_trait = faith_warrior
+            add = 10
+        }
+        modifier = {
+            has_trait = saint
+            add = 15
+        }
+    }
+    
+    on_accept = {
+        scope:actor = {
+            var:missionary_scheme = {
+                save_scope_as = scheme
+            }
+        }
+        scope:recipient = {
+            add_to_scheme = scope:scheme
+            add_gold = scope:actor.minor_gold_value
+            if = {
+                limit = {
+                    scope:additional_payment = yes
+                }
+                add_gold = scope:actor.minor_gold_value
+            }
+            add_piety = medium_piety_value
+            if = {
+                limit = {
+                    scope:demand_religious_duty = yes
+                }
+                add_piety = medium_piety_value
+            }
+            if = {
+                limit = {
+                    scope:additional_hook = yes
+                }
+                add_hook = {
+                    target = scope:actor
+                    type = favor_hook
+                }
+            }
+        }
+    }
+    
+    send_option = {
+        flag = additional_payment
+        localization = "missionary.interaction.add_agent.additional_payment"
+    }
+    
+    send_option = {
+        flag = use_hook
+        localization = missionary.interaction.add_agent.use_hook
+        is_valid = {
+            scope:actor = {
+                has_hook = scope:recipient
+            }
+        }
+    }
+    
+    send_option = {
+        flag = additional_hook
+        localization = "missionary.interaction.add_agent.additional_hook"
+        is_valid = {
+            scope:recipient = {
+                can_add_hook = {
+                    type = favor_hook
+                    target = scope:actor
+                }
+            }
+        }
+    }
+    
+    send_option = {
+        flag = demand_religious_duty
+        localization = missionary.interaction.add_agent.demand_religious_duty
+    }
+    
+    cost = {											# Scripted cost for the interaction. The interaction will be disabled if the actor can't pay up, and the cost will be subtracted from the actor when the interaction is sent. Renown can only be spent by the dynast.
+        piety = {
+            if = {
+                limit = {
+                    scope:demand_religious_duty = yes
+                }
+                value = medium_piety_value
+            }
+        }
+        prestige = {
+            if = {
+                limit = {
+                    scope:demand_religious_duty = yes
+                }
+                value = medium_prestige_value
+            }
+        }
+        gold = {
+            value = minor_gold_value
+            if = {
+                limit = {
+                    scope:additional_payment = yes
+                }
+                add = minor_gold_value
             }
         }
     }

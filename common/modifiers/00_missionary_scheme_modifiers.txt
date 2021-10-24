@@ -1,25 +1,31 @@
 # Positive Modifiers
 missionary_target_interested_modifier = {
+    icon = learning_positive
     scheme_success_chance = 25
 }
 
 missionary_rich_arrival = {
+    icon = economy_positive
     scheme_success_chance = 10
 }
 
 missionary_godly_sign = {
+    icon = magic_positive
     scheme_success_chance = 15
 }
 
 # Negative Modifiers
 missionary_target_insulted_modifier = {
+    icon = social_negative
     scheme_success_chance = -25
 }
 
 missionary_poor_arrival = {
+    icon = economy_negative
     scheme_success_chance = -15
 }
 
 missionary_devil_sign = {
+    icon = magic_negative
     scheme_success_chance = -50
 }

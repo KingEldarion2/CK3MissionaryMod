@@ -6,9 +6,9 @@ namespace = missionary
 missionary.1000 = {
     type = character_event
     theme = faith
-    desc = "The Missionaries are requesting some initial funds to begin with the religious mission."
+    desc = "missionary.missionary.1000.desc"
     option = {
-        name = "Let us show them that we lack for nothing"
+        name = "missionary.missionary.1000.a"
         scope:owner = {
             remove_short_term_gold = massive_gold_value
             add_piety = 50
@@ -20,14 +20,14 @@ missionary.1000 = {
         }
     }
     option = {
-        name = "They shall have it!"
+        name = "missionary.missionary.1000.b"
         scope:owner = {
             remove_short_term_gold = medium_gold_value
             add_piety = 15
         }
     }
     option = {
-        name = "It is their Duty to do it!"
+        name = "missionary.missionary.1000.c"
         scope:owner = {
             add_piety = -250
             add_prestige = -100
@@ -39,9 +39,12 @@ missionary.1000 = {
         }
     }
     option = {
-        name = "This is too expensive!"
+        name = "missionary.missionary.1000.d"
         scope:scheme = {
             end_scheme = yes
+        }
+        scope:owner = {
+            remove_variable = missionary_scheme
         }
     }
 }
@@ -53,7 +56,8 @@ missionary.1000 = {
 missionary.2000 = {
     type = character_event
     theme = faith
-    desc = "The Target is really interested in the true Faith"
+    desc = "missionary.missionary.2000.desc"
+    right_portrait = scope:target
     trigger = {
         scope:scheme = {
             NOT = { has_variable = had_missionary_2000_event }
@@ -68,7 +72,7 @@ missionary.2000 = {
         }
     }
     option = {
-        name = "Sounds promising!"
+        name = "missionary.missionary.2000.a"
         scope:owner = {
             add_piety = 10
         }
@@ -82,7 +86,7 @@ missionary.2000 = {
         }
     }
     option = {
-        name = "Then let us push it even further!"
+        name = "missionary.missionary.2000.b"
         scope:owner = {
             add_piety = 15
             remove_short_term_gold = activity_medium_gold_value
@@ -102,9 +106,9 @@ missionary.2000 = {
 missionary.2001 = {
     type = character_event
     theme = faith
-    desc = "Just as the Missionaries begin their prayer on the market, the sun broke through the thick clouds. And not a second after they finished, the clouds retake the light."
+    desc = "missionary.missionary.2001.desc"
     option = {
-        name = "Can't you see whose faith will guide you into the light?"
+        name = "missionary.missionary.2001.a"
         scope:scheme = {
             add_scheme_modifier = {
                 type = missionary_godly_sign
@@ -124,44 +128,168 @@ missionary.2001 = {
 missionary.4000 = {
     type = character_event
     theme = faith
-    desc = "Your Religious Mission was thrown out of the Country. And if you come back there may be consequences."
+    desc = "missionary.missionary.4000.desc"
     immediate = {
         scope:scheme = {
             add_scheme_progress = -3
         }
     }
     option = {
-        name = "Time to go home"
+        name = "missionary.missionary.4000.a"
         scope:scheme = {
             end_scheme = yes
         }
+        scope:owner = {
+            remove_variable = missionary_scheme
+        }
     }
     option = {
-        name = "There is no going back!"
+        name = "missionary.missionary.4000.b"
         random_list = {
             10 = {
                 scope:scheme_priest = {
-                        death = {
-                            killer = scope:target
-                            death_reason = death_execution
-                        }
+                    death = {
+                        killer = scope:target
+                        death_reason = death_execution
+                    }
                 }
                 scope:scheme = {
                     end_scheme = yes
+                }
+                scope:owner = {
+                    remove_variable = missionary_scheme
+                }
+                modifier = {
+                    scope:target = {
+                        OR = {
+                            has_trait = wrathful
+                            has_trait = ambitious
+                            has_trait = diligent
+                            has_trait = vengeful
+                            has_trait = deceitful
+                            has_trait = arrogant
+                            has_trait = arbitrary
+                            has_trait = paranoid
+                            has_trait = zealous
+                            has_trait = cynical
+                            has_trait = callous
+                            has_trait = sadistic
+                            has_trait = impatient
+                        }
+                    }
+                    add = 25
+                }
+                modifier = {
+                    scope:target = {
+                        OR = {
+                            has_trait = craven
+                            has_trait = calm
+                            has_trait = chaste
+                            has_trait = content
+                            has_trait = lazy
+                            has_trait = forgiving
+                            has_trait = shy
+                            has_trait = honest
+                            has_trait = humble
+                            has_trait = just
+                            has_trait = patient
+                            has_trait = trusting
+                            has_trait = compassionate
+                        }
+                    }
+                    add = -25
                 }
             }
             50 = {
                 rightfully_imprison_character_effect = {
-                	TARGET = scope:scheme_priest
-                	IMPRISONER = scope:target
+                    TARGET = scope:scheme_priest
+                    IMPRISONER = scope:target
                 }
                 scope:scheme = {
                     end_scheme = yes
+                }
+                scope:owner = {
+                    remove_variable = missionary_scheme
+                }
+                modifier = {
+                    scope:target = {
+                        OR = {
+                            has_trait = wrathful
+                            has_trait = ambitious
+                            has_trait = diligent
+                            has_trait = vengeful
+                            has_trait = deceitful
+                            has_trait = arrogant
+                            has_trait = arbitrary
+                            has_trait = paranoid
+                            has_trait = zealous
+                            has_trait = cynical
+                            has_trait = callous
+                            has_trait = sadistic
+                            has_trait = impatient
+                        }
+                    }
+                    add = 50
+                }
+                modifier = {
+                    scope:target = {
+                        OR = {
+                            has_trait = craven
+                            has_trait = calm
+                            has_trait = chaste
+                            has_trait = content
+                            has_trait = lazy
+                            has_trait = forgiving
+                            has_trait = shy
+                            has_trait = honest
+                            has_trait = humble
+                            has_trait = just
+                            has_trait = patient
+                            has_trait = trusting
+                            has_trait = compassionate
+                        }
+                    }
+                    add = -45
                 }
             }
             200 = {
                 scope:scheme = {
                     end_scheme = yes
+                }
+                scope:owner = {
+                    remove_variable = missionary_scheme
+                }
+                modifier = {
+                    scope:target = {
+                        OR = {
+                            has_trait = calm
+                            has_trait = content
+                            has_trait = forgiving
+                            has_trait = humble
+                            has_trait = trusting
+                            has_trait = compassionate
+                            has_trait = just
+                            has_trait = stubborn
+                            has_trait = honest
+                            has_trait = diligent
+                        }
+                    }
+                    add = 50
+                }
+                modifier = {
+                    scope:target = {
+                        OR = {
+                            has_trait = sadistic
+                            has_trait = cynical
+                            has_trait = zealous
+                            has_trait = paranoid
+                            has_trait = impatient
+                            has_trait = deceitful
+                            has_trait = vengeful
+                            has_trait = wrathful
+                        }
+                    }
+                    add = -75
                 }
             }
             100 = {
@@ -171,6 +299,50 @@ missionary.4000 = {
                 scope:scheme_priest = {
                     add_piety = 50
                 }
+                modifier = {
+                    scope:target = {
+                        OR = {
+                            has_trait = fickle
+                            has_trait = lazy
+                            has_trait = craven
+                            has_trait = calm
+                            has_trait = content
+                            has_trait = forgiving
+                            has_trait = shy
+                            has_trait = humble
+                            has_trait = trusting
+                            has_trait = compassionate
+                        }
+                    }
+                    add = 250
+                }
+                modifier = {
+                    scope:target = {
+                        OR = {
+                            has_trait = sadistic
+                            has_trait = cynical
+                            has_trait = zealous
+                            has_trait = paranoid
+                            has_trait = impatient
+                            has_trait = just
+                            has_trait = arrogant
+                            has_trait = honest
+                            has_trait = deceitful
+                            has_trait = vengeful
+                            has_trait = stubborn
+                            has_trait = diligent
+                            has_trait = ambitious
+                            has_trait = wrathful
+                        }
+                    }
+                    add = -75
+                }
+                modifier = {
+                    add = {
+                        value = scope:scheme.scheme_success_chance
+                        multiply = 5
+                    }
+                }
             }
         }
     }
@@ -179,7 +351,7 @@ missionary.4000 = {
 missionary.4001 = {
     type = character_event
     theme = faith
-    desc = "Your Priest has lost his nerves and insulted all non (yet) believers"
+    desc = "missionary.missionary.4001.desc"
     immediate = {
         add_scheme_progress = -2
         scope:scheme_priest = {
@@ -202,14 +374,14 @@ missionary.4001 = {
         }
     }
     option = {
-        name = "You idiot!"
+        name = "missionary.missionary.4001.a"
     }
 }
 # 4002 - A Sign from the Devil himself
 missionary.4002 = {
     type = character_event
     theme = faith
-    desc = "Just as the missionaries begin their Prayers on the market, the world darkens. A shadow moves before the Sun and hides it from the World. A sure sign of the evil powers in this world."
+    desc = "missionary.missionary.4002.desc"
     immediate = {
         scope:scheme = {
             add_scheme_modifier = {
@@ -218,7 +390,7 @@ missionary.4002 = {
         }
     }
     option = {
-        name = "Just a coincidence!"
+        name = "missionary.missionary.4002.a"
     }
 }
 
@@ -229,12 +401,12 @@ missionary.4002 = {
 missionary.9000 = {
     type = character_event
     theme = faith
-    desc = "A whole Realm found into the Light."
+    desc = "missionary.missionary.9000.desc"
 
     left_portrait = scope:target
 
     option = {
-        name = "Welcome to the Light!"
+        name = "missionary.missionary.9000.a"
 
         scope:target = {
             save_scope_as = recipient
@@ -263,6 +435,9 @@ missionary.9000 = {
         scope:scheme = {
             end_scheme = yes
         }
+        scope:owner = {
+            remove_variable = missionary_scheme
+        }
     }
 }
 
@@ -270,9 +445,9 @@ missionary.9000 = {
 missionary.9100 = {
     type = character_event
     theme = faith
-    desc = "The Religious mission was no success."
+    desc = "missionary.missionary.9100.desc"
     option = {
-        name = "I will extend this mission until we succeed!"
+        name = "missionary.missionary.9100.a"
         scope:owner = {
             remove_short_term_gold = activity_medium_gold_value
         }
@@ -281,9 +456,12 @@ missionary.9100 = {
         }
     }
     option = {
-        name = "To hell with these heathens!"
+        name = "missionary.missionary.9100.b"
         scope:scheme = {
             end_scheme = yes
+        }
+        scope:owner = {
+            remove_variable = missionary_scheme
         }
     }
 }
@@ -293,9 +471,9 @@ missionary.9100 = {
 missionary.9200 = {
     type = character_event
     theme = faith
-    desc = "Money is needed for the conversion"
+    desc = "missionary.missionary.9200.desc"
     option = {
-        name = "Whatever it will cost!"
+        name = "missionary.missionary.9200.a"
         scope:owner = {
             remove_short_term_gold = monumental_gold_value
             add_piety = 500
@@ -304,7 +482,7 @@ missionary.9200 = {
         trigger_event = missionary.9000
     }
     option = {
-        name = "Let me look into the financials myself"
+        name = "missionary.missionary.9200.b"
         missionary_payment_stewardship = {
             money_good = massive_gold_value
             money_original = monumental_gold_value
@@ -323,13 +501,16 @@ missionary.9200 = {
         }
     }
     option = {
-        name = "I will not pay for that!"
+        name = "missionary.missionary.9200.c"
         scope:owner = {
             add_piety = -150
             add_prestige = -150
         }
         scope:scheme  = {
             end_scheme = yes
+        }
+        scope:owner = {
+            remove_variable = missionary_scheme
         }
     }
 }
@@ -338,9 +519,9 @@ missionary.9200 = {
 missionary.9201 = {
     type = character_event
     theme = faith
-    desc = "Money is needed for the conversion"
+    desc = "missionary.missionary.9200.desc"
     option = {
-        name = "Whatever it will cost!"
+        name = "missionary.missionary.9200.a"
         scope:owner = {
             remove_short_term_gold = massive_gold_value
             add_piety = 250
@@ -349,7 +530,7 @@ missionary.9201 = {
         trigger_event = missionary.9000
     }
     option = {
-        name = "Let me look into the financials myself"
+        name = "missionary.missionary.9200.b"
         missionary_payment_stewardship = {
             money_good = major_gold_value
             money_original = massive_gold_value
@@ -368,13 +549,16 @@ missionary.9201 = {
         }
     }
     option = {
-        name = "I will not pay for that!"
+        name = "missionary.missionary.9200.c"
         scope:owner = {
             add_piety = -150
             add_prestige = -150
         }
         scope:scheme  = {
             end_scheme = yes
+        }
+        scope:owner = {
+            remove_variable = missionary_scheme
         }
     }
 }
@@ -383,9 +567,9 @@ missionary.9201 = {
 missionary.9202 = {
     type = character_event
     theme = faith
-    desc = "Money is needed for the conversion"
+    desc = "missionary.missionary.9200.desc"
     option = {
-        name = "Whatever it will cost!"
+        name = "missionary.missionary.9200.a"
         scope:owner = {
             remove_short_term_gold = major_gold_value
             add_piety = 200
@@ -394,7 +578,7 @@ missionary.9202 = {
         trigger_event = missionary.9000
     }
     option = {
-        name = "Let me look into the financials myself"
+        name = "missionary.missionary.9200.b"
         missionary_payment_stewardship = {
             money_good = medium_gold_value
             money_original = major_gold_value
@@ -413,13 +597,16 @@ missionary.9202 = {
         }
     }
     option = {
-        name = "I will not pay for that!"
+        name = "missionary.missionary.9200.c"
         scope:owner = {
             add_piety = -150
             add_prestige = -150
         }
         scope:scheme  = {
             end_scheme = yes
+        }
+        scope:owner = {
+            remove_variable = missionary_scheme
         }
     }
 }
@@ -428,9 +615,9 @@ missionary.9202 = {
 missionary.9203 = {
     type = character_event
     theme = faith
-    desc = "Money is needed for the conversion"
+    desc = "missionary.missionary.9200.desc"
     option = {
-        name = "Whatever it will cost!"
+        name = "missionary.missionary.9200.a"
         scope:owner = {
             remove_short_term_gold = medium_gold_value
             add_piety = 150
@@ -439,7 +626,7 @@ missionary.9203 = {
         trigger_event = missionary.9000
     }
     option = {
-        name = "Let me look into the financials myself"
+        name = "missionary.missionary.9200.b"
         missionary_payment_stewardship = {
             money_good = minor_gold_value
             money_original = medium_gold_value
@@ -458,13 +645,16 @@ missionary.9203 = {
         }
     }
     option = {
-        name = "I will not pay for that!"
+        name = "missionary.missionary.9200.c"
         scope:owner = {
             add_piety = -150
             add_prestige = -150
         }
         scope:scheme  = {
             end_scheme = yes
+        }
+        scope:owner = {
+            remove_variable = missionary_scheme
         }
     }
 }
@@ -473,9 +663,9 @@ missionary.9203 = {
 missionary.9204 = {
     type = character_event
     theme = faith
-    desc = "Money is needed for the conversion"
+    desc = "missionary.missionary.9200.desc"
     option = {
-        name = "Whatever it will cost!"
+        name = "missionary.missionary.9200.a"
         scope:owner = {
             remove_short_term_gold = minor_gold_value
             add_piety = 125
@@ -484,7 +674,7 @@ missionary.9204 = {
         trigger_event = missionary.9000
     }
     option = {
-        name = "Let me look into the financials myself"
+        name = "missionary.missionary.9200.b"
         missionary_payment_stewardship = {
             money_good = tiny_gold_value
             money_original = minor_gold_value
@@ -503,13 +693,16 @@ missionary.9204 = {
         }
     }
     option = {
-        name = "I will not pay for that!"
+        name = "missionary.missionary.9200.c"
         scope:owner = {
             add_piety = -150
             add_prestige = -150
         }
         scope:scheme  = {
             end_scheme = yes
+        }
+        scope:owner = {
+            remove_variable = missionary_scheme
         }
     }
 }
@@ -518,9 +711,9 @@ missionary.9204 = {
 missionary.9205 = {
     type = character_event
     theme = faith
-    desc = "Money is needed for the conversion"
+    desc = "missionary.missionary.9200.desc"
     option = {
-        name = "Whatever it will cost!"
+        name = "missionary.missionary.9200.a"
         scope:owner = {
             remove_short_term_gold = tiny_gold_value
             add_piety = 100
@@ -529,13 +722,16 @@ missionary.9205 = {
         trigger_event = missionary.9000
     }
     option = {
-        name = "I will not pay for that!"
+        name = "missionary.missionary.9200.c"
         scope:owner = {
             add_piety = -150
             add_prestige = -150
         }
         scope:scheme  = {
             end_scheme = yes
+        }
+        scope:owner = {
+            remove_variable = missionary_scheme
         }
     }
 }
